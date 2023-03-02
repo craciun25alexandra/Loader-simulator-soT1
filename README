@@ -1,0 +1,15 @@
+    Functia itereaza prin segemente, iar daca nu gaseste adresa la niciunul se
+apeleaza handlerul default. Adresa face parte din segment daca este cuprinsa
+intre adresa de inceput a segmentului si aceasta + mem_size. Apoi se afla numarul
+paginii la care este incadrata. Pentru a verifica daca pagina respectiva a fost
+mapata anterior, ma folosesc de vectorul data, care este initializat cu 0.
+Daca mem_size se imparte exact la size ul paginii vectorul este declarat cu
+mem_size/getpagesize(), iar in caz contrat, pentru a declara numarul corect
+de pagini, cu mem_size/getpagesize() + 1. Daca vectorul corespunzator indexului
+paginii este 0, atunci pagina se mapeaza, iar in caz contrar se apeleaza
+handlerul default. Dupa ce se mapeaza, se marcheaza ca mapata, punand 1 in vector
+si se verifica in ce categorie face parte pagina prin calcule aritmetice: fie
+trebuie pusa in intregime informatia din file, fie o parte, iar ulterior completata
+cu 0 partea paginii - cea pusa, fie face parte din mem_size, dar nu si din file_size,
+deci trebuie umpluta cu 0. Pentru a accesa informatia utila(offsetul segmentului + 
+informatia paginii respective) se utilizeaza Lseek. Apoi cu mprotect se seteaza protectia.
